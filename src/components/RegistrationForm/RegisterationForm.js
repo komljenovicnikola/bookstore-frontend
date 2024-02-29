@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../../services/apiService';
+import { register } from '../../services/apiService';
 
-const LoginForm = ({ setUserType }) => {
+const RegistrationForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
+    firstName: '',
+    lastName: '',
     password: ''
   });
   const [error, setError] = useState('');
@@ -15,8 +17,13 @@ const LoginForm = ({ setUserType }) => {
   };
 
   const handleSubmit = async (e) => {
+    const transformedData = {
+      ...formData,
+      first_name: formData.firstName,
+      last_name: formData.lastName
+    };
     e.preventDefault();
-    login(formData, setUserType, navigate, setError);
+    register(transformedData, navigate, setError);
   };
 
   return (
@@ -25,7 +32,7 @@ const LoginForm = ({ setUserType }) => {
         <div className="col-md-6">
           <div className="card">
             <div className="card-body">
-              <h2 className="card-title text-center mb-4">Bookstore Login</h2>
+              <h2 className="card-title text-center mb-4">Bookstore Register</h2>
               {error && <div className="alert alert-danger" role="alert">{error}</div>}
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
@@ -37,7 +44,30 @@ const LoginForm = ({ setUserType }) => {
                     value={formData.email}
                     onChange={handleChange}
                     className="form-control"
-                    placeholder="name@example.com"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="firstName" className="form-label">First Name</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="lastName" className="form-label">Last Name</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="form-control"
                     required
                   />
                 </div>
@@ -53,10 +83,10 @@ const LoginForm = ({ setUserType }) => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">Login</button>
+                <button type="submit" className="btn btn-primary w-100">Register</button>
               </form>
               <div className="mt-3 text-center">
-                Don't have an account? <Link to="/register">Register</Link>
+                Already have an account? <Link to="/">Login</Link>
               </div>
             </div>
           </div>
@@ -66,4 +96,4 @@ const LoginForm = ({ setUserType }) => {
   );
 };
 
-export default LoginForm;
+export default RegistrationForm;
