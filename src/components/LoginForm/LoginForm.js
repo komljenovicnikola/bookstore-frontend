@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../services/apiService';
 
-const LoginForm = ({ setUserType }) => {
+const LoginForm = ({ setUserDetails }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -16,7 +16,7 @@ const LoginForm = ({ setUserType }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData, setUserType, navigate, setError);
+    login(formData, setUserDetails, navigate, setError);
   };
 
   return (

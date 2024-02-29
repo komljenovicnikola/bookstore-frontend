@@ -4,15 +4,19 @@ const apiService = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 });
 
-export const login = async (formData, setUserType, navigate, setError) => {
+export const login = async (formData, setUserDetails, navigate, setError) => {
     try {
         const response = await apiService.post('/users/login', formData);
-        const userType = response.data.role;
-        setUserType(userType);
+        const userDetails = {
+            "id": response.data.id,
+            "role": response.data.role,
+            "first_name": response.data.first_name,
+            "last_name": response.data.last_name,
+        };
+        setUserDetails(userDetails);
         navigate('/bookstore');
     } catch (error) {
         setError('Invalid email or password');
-        console.error(error.response.data);
     }
 }
 
@@ -23,6 +27,15 @@ export const register = async (formData, navigate, setError) => {
         navigate('/');
     } catch (error) {
         setError('Registration failed');
-        console.error(error.response.data);
+    }
+}
+
+export const removeBook = async (bookId, borrowedBooks, setBorrowedBooks) => {
+    try {
+        await apiService.delete(`/books/${bookId}`);
+        const updatedBooks = borrowedBooks.filter(book => book.id !== bookId);
+        setBorrowedBooks(updatedBooks);
+    } catch (error) {
+        console.error('Error removing book:', error);
     }
 }
