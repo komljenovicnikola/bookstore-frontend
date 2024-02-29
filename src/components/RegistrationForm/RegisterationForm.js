@@ -17,12 +17,17 @@ const RegistrationForm = () => {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return;
+    }
     const transformedData = {
       ...formData,
       first_name: formData.firstName,
       last_name: formData.lastName
     };
-    e.preventDefault();
     register(transformedData, navigate, setError);
   };
 
