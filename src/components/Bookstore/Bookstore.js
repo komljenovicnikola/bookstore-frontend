@@ -94,7 +94,7 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
   const handleUpdateBook = () => {
     const bookData = { ...newBook, user_id: selectedUser.id };
     axios.put(`${process.env.REACT_APP_API_URL}/books/${newBook.id}`, bookData)
-      .then(response => {
+      .then(_ => {
         setShowEditModal(false);
         const updatedBooks = borrowedBooks.map(book => {
           if (book.id === newBook.id) {
@@ -118,7 +118,7 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
   };
 
   const handleRemoveBook = (bookId) => { 
-    removeBook(bookId, borrowedBooks, setBorrowedBooks);
+    removeBook(selectedUser.id, bookId, borrowedBooks, setBorrowedBooks);
   }
 
   return (

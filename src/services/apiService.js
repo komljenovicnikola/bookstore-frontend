@@ -30,9 +30,9 @@ export const register = async (formData, navigate, setError) => {
     }
 }
 
-export const removeBook = async (bookId, borrowedBooks, setBorrowedBooks) => {
+export const removeBook = async (userId, bookId, borrowedBooks, setBorrowedBooks) => {
     try {
-        await apiService.delete(`/books/${bookId}`);
+        await apiService.delete(`books/${userId}/return/${bookId}`);
         const updatedBooks = borrowedBooks.filter(book => book.id !== bookId);
         setBorrowedBooks(updatedBooks);
     } catch (error) {
