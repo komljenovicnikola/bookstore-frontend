@@ -1,6 +1,4 @@
-# Project Name
-
-Bookstore Frontend App
+# Bookstore Frontend App
 
 ## Install
 
