@@ -72,7 +72,9 @@ export const updateBook = async (bookData) => {
 
 export const removeBook = async (userId, bookId) => {
   try {
-    const response = await apiService.delete(`books/${userId}/return/${bookId}`);
+    const response = await apiService.delete(
+      `books/${userId}/return/${bookId}`,
+    );
     return response.data;
   } catch (error) {
     console.error('Error removing book:', error);
