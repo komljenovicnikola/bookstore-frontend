@@ -21,19 +21,21 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
 
   useEffect(() => {
     if (userDetails.role === 'librarian' || userDetails.role === 'admin') {
-      axios.get(`${process.env.REACT_APP_API_URL}/users/customers`)
-        .then(response => {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/users/customers`)
+        .then((response) => {
           setUsers(response.data);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error fetching users:', error);
         });
     } else if (userDetails.role === 'customer') {
-      axios.get(`${process.env.REACT_APP_API_URL}/users/${userDetails.id}/books`)
-        .then(response => {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/users/${userDetails.id}/books`)
+        .then((response) => {
           setBorrowedBooks(response.data);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error fetching borrowed books:', error);
         });
     }
@@ -42,11 +44,12 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
   const handleUserClick = (user) => {
     setSelectedUser(user);
     if (userDetails.role === 'librarian' || userDetails.role === 'admin') {
-      axios.get(`${process.env.REACT_APP_API_URL}/users/${user.id}/books`)
-        .then(response => {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/users/${user.id}/books`)
+        .then((response) => {
           setBorrowedBooks(response.data);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error fetching borrowed books:', error);
         });
     }
@@ -75,51 +78,52 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
 
   const handleSaveBook = () => {
     const bookData = { ...newBook, user_id: selectedUser.id };
-    axios.post(`${process.env.REACT_APP_API_URL}/books/borrow`, bookData)
-      .then(response => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/books/borrow`, bookData)
+      .then((response) => {
         setShowModal(false);
         setBorrowedBooks([...borrowedBooks, response.data]);
         setNewBook({
           title: '',
           author: '',
           year: '',
-          user_id: selectedUser.id
+          user_id: selectedUser.id,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error adding book:', error);
       });
   };
 
   const handleUpdateBook = () => {
     const bookData = { ...newBook, user_id: selectedUser.id };
-    axios.put(`${process.env.REACT_APP_API_URL}/books/${newBook.id}`, bookData)
-      .then(_ => {
+    axios
+      .put(`${process.env.REACT_APP_API_URL}/books/${newBook.id}`, bookData)
+      .then((_) => {
         setShowEditModal(false);
-        const updatedBooks = borrowedBooks.map(book => {
+        const updatedBooks = borrowedBooks.map((book) => {
           if (book.id === newBook.id) {
             return newBook;
           } else {
             return book;
           }
-        }
-        );
+        });
         setBorrowedBooks(updatedBooks);
         setNewBook({
-          title: '', 
-          author: '', 
-          year: '', 
-          user_id: selectedUser.id
+          title: '',
+          author: '',
+          year: '',
+          user_id: selectedUser.id,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error updating book:', error);
       });
   };
 
-  const handleRemoveBook = (bookId) => { 
+  const handleRemoveBook = (bookId) => {
     removeBook(selectedUser.id, bookId, borrowedBooks, setBorrowedBooks);
-  }
+  };
 
   return (
     <div className="container mt-5">
@@ -132,18 +136,23 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
         </div>
         {(userDetails.role === 'librarian' || userDetails.role === 'admin') && (
           <div className="col-md-4">
-            <UsersList
-              users={users}
-              handleUserClick={handleUserClick}
-            />
+            <UsersList users={users} handleUserClick={handleUserClick} />
           </div>
         )}
         {(userDetails.role === 'customer' || selectedUser) && (
           <div className="col-md-8">
-            <BooksTable 
+            <BooksTable
               borrowedBooks={borrowedBooks}
-              firstName={userDetails.role === 'customer' ? userDetails.first_name : selectedUser.first_name} 
-              lastName={userDetails.role === 'customer' ? userDetails.last_name : selectedUser.last_name}
+              firstName={
+                userDetails.role === 'customer'
+                  ? userDetails.first_name
+                  : selectedUser.first_name
+              }
+              lastName={
+                userDetails.role === 'customer'
+                  ? userDetails.last_name
+                  : selectedUser.last_name
+              }
               handleAddBookClick={handleAddBookClick}
               userRole={userDetails.role}
               handleEditBook={handleEditBookClick}
@@ -154,7 +163,7 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
       </div>
       {showModal && (
         <BookModal
-          title = {"Add Book"}
+          title={'Add Book'}
           handleCloseModal={handleCloseModal}
           newBook={newBook}
           handleInputChange={handleInputChange}
@@ -163,7 +172,7 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
       )}
       {showEditModal && (
         <BookModal
-          title = {"Edit Book"}
+          title={'Edit Book'}
           handleCloseModal={handleCloseEditModal}
           newBook={newBook}
           handleInputChange={handleInputChange}

@@ -6,7 +6,7 @@ const LoginForm = ({ setUserDetails }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
   });
   const [error, setError] = useState('');
 
@@ -26,10 +26,16 @@ const LoginForm = ({ setUserDetails }) => {
           <div className="card">
             <div className="card-body">
               <h2 className="card-title text-center mb-4">Bookstore Login</h2>
-              {error && <div className="alert alert-danger" role="alert">{error}</div>}
+              {error && (
+                <div className="alert alert-danger" role="alert">
+                  {error}
+                </div>
+              )}
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Email</label>
+                  <label htmlFor="email" className="form-label">
+                    Email
+                  </label>
                   <input
                     type="email"
                     id="email"
@@ -42,7 +48,9 @@ const LoginForm = ({ setUserDetails }) => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label">Password</label>
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
                   <input
                     type="password"
                     id="password"
@@ -53,7 +61,9 @@ const LoginForm = ({ setUserDetails }) => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">Login</button>
+                <button type="submit" className="btn btn-primary w-100">
+                  Login
+                </button>
               </form>
               <div className="mt-3 text-center">
                 Don't have an account? <Link to="/register">Register</Link>

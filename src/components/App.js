@@ -10,10 +10,16 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LoginForm  setUserDetails={setUserDetails}/>}/>
+        <Route
+          path="/"
+          element={<LoginForm setUserDetails={setUserDetails} />}
+        />
 
-        <Route path="/register" element={<RegistrationForm />}/>
-        <Route path="/bookstore" element={<Bookstore userDetails={userDetails} />}/>
+        <Route path="/register" element={<RegistrationForm />} />
+        <Route
+          path="/bookstore"
+          element={<Bookstore userDetails={userDetails} />}
+        />
       </Routes>
     </BrowserRouter>
   );

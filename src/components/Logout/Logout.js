@@ -5,11 +5,13 @@ const LogoutButton = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate('/'); 
+    navigate('/');
   };
 
   return (
-    <button className="btn btn-primary" onClick={handleLogout}>Logout</button>
+    <button className="btn btn-primary" onClick={handleLogout}>
+      Logout
+    </button>
   );
 };
 
