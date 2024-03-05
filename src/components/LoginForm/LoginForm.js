@@ -16,7 +16,14 @@ const LoginForm = ({ setUserDetails }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData, setUserDetails, navigate, setError);
+    login(formData)
+      .then((userDetails) => {
+        setUserDetails(userDetails);
+        navigate('/bookstore');
+      })
+      .catch(() => {
+        setError('Invalid email or password');
+      });
   };
 
   return (

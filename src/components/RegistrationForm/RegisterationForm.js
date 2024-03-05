@@ -28,7 +28,14 @@ const RegistrationForm = () => {
       first_name: formData.firstName,
       last_name: formData.lastName,
     };
-    register(transformedData, navigate, setError);
+    register(transformedData)
+    .then(() => {
+      navigate('/');
+    })
+    .catch(() => {
+      setError('Invalid email or password');
+    }
+    )
   };
 
   return (

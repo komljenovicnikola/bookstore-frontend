@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import LogoutButton from '../Logout/Logout';
 import BookModal from '../Books/BookModal';
 import UsersList from './Users';
 import BooksTable from '../Books/BooksTable';
-import { removeBook } from '../../services/apiService';
+import {
+  getBooksByUser,
+  getCustomers,
+  removeBook,
+  saveNewBook,
+  updateBook,
+} from '../../services/apiService';
 
 const Bookstore = ({ userDetails, selectedUserId }) => {
   const [borrowedBooks, setBorrowedBooks] = useState([]);
@@ -12,6 +17,7 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [error, setError] = useState('');
   const [newBook, setNewBook] = useState({
     title: '',
     author: '',
@@ -21,22 +27,20 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
 
   useEffect(() => {
     if (userDetails.role === 'librarian' || userDetails.role === 'admin') {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/users/customers`)
+      getCustomers(setUsers, setError)
         .then((response) => {
-          setUsers(response.data);
+          setUsers(response);
         })
-        .catch((error) => {
-          console.error('Error fetching users:', error);
+        .catch(() => {
+          setError('There was an issue with your request');
         });
     } else if (userDetails.role === 'customer') {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/users/${userDetails.id}/books`)
+      getBooksByUser(userDetails.id)
         .then((response) => {
-          setBorrowedBooks(response.data);
+          setBorrowedBooks(response);
         })
-        .catch((error) => {
-          console.error('Error fetching borrowed books:', error);
+        .catch(() => {
+          setError('There was an issue with your request');
         });
     }
   }, [userDetails, selectedUserId]);
@@ -44,13 +48,12 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
   const handleUserClick = (user) => {
     setSelectedUser(user);
     if (userDetails.role === 'librarian' || userDetails.role === 'admin') {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/users/${user.id}/books`)
+      getBooksByUser(user.id)
         .then((response) => {
-          setBorrowedBooks(response.data);
+          setBorrowedBooks(response);
         })
-        .catch((error) => {
-          console.error('Error fetching borrowed books:', error);
+        .catch(() => {
+          setError('There was an issue with your request');
         });
     }
   };
@@ -78,11 +81,10 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
 
   const handleSaveBook = () => {
     const bookData = { ...newBook, user_id: selectedUser.id };
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/books/borrow`, bookData)
+    saveNewBook(bookData)
       .then((response) => {
         setShowModal(false);
-        setBorrowedBooks([...borrowedBooks, response.data]);
+        setBorrowedBooks([...borrowedBooks, response]);
         setNewBook({
           title: '',
           author: '',
@@ -90,25 +92,20 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
           user_id: selectedUser.id,
         });
       })
-      .catch((error) => {
-        console.error('Error adding book:', error);
+      .catch(() => {
+        setError('There was an issue with your request');
       });
   };
 
   const handleUpdateBook = () => {
     const bookData = { ...newBook, user_id: selectedUser.id };
-    axios
-      .put(`${process.env.REACT_APP_API_URL}/books/${newBook.id}`, bookData)
-      .then((_) => {
-        setShowEditModal(false);
-        const updatedBooks = borrowedBooks.map((book) => {
-          if (book.id === newBook.id) {
-            return newBook;
-          } else {
-            return book;
-          }
-        });
+    updateBook(bookData)
+      .then((response) => {
+        const updatedBooks = borrowedBooks.map((book) =>
+          book.id === response.data.id ? response.data : book,
+        );
         setBorrowedBooks(updatedBooks);
+        setShowEditModal(false);
         setNewBook({
           title: '',
           author: '',
@@ -116,13 +113,20 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
           user_id: selectedUser.id,
         });
       })
-      .catch((error) => {
-        console.error('Error updating book:', error);
+      .catch(() => {
+        setError('There was an issue with your request');
       });
   };
 
   const handleRemoveBook = (bookId) => {
-    removeBook(selectedUser.id, bookId, borrowedBooks, setBorrowedBooks);
+    removeBook(selectedUser.id, bookId)
+      .then((response) => {
+        const updatedBooks = response.filter((book) => book.id !== bookId);
+        setBorrowedBooks(updatedBooks);
+      })
+      .catch(() => {
+        setError('There was an issue with your request');
+      });
   };
 
   return (
@@ -134,6 +138,11 @@ const Bookstore = ({ userDetails, selectedUserId }) => {
         <div className="col-md-1">
           <LogoutButton />
         </div>
+        {error && (
+          <div className="alert alert-danger text-center" role="alert">
+            {error}
+          </div>
+        )}
         {(userDetails.role === 'librarian' || userDetails.role === 'admin') && (
           <div className="col-md-4">
             <UsersList users={users} handleUserClick={handleUserClick} />
