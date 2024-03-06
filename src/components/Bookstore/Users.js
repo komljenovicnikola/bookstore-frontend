@@ -8,8 +8,12 @@ const UsersList = ({ users, handleUserClick }) => {
       </div>
       <div className="card-body">
         <ul className="list-group">
-          {users.map(user => (
-            <li key={user.id} className="list-group-item" onClick={() => handleUserClick(user)}>
+          {users.map((user) => (
+            <li
+              key={user.id}
+              className="list-group-item"
+              onClick={() => handleUserClick(user)}
+            >
               {user.first_name} {user.last_name}
             </li>
           ))}

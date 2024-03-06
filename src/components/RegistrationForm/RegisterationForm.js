@@ -8,7 +8,7 @@ const RegistrationForm = () => {
     email: '',
     firstName: '',
     lastName: '',
-    password: ''
+    password: '',
   });
   const [error, setError] = useState('');
 
@@ -18,7 +18,7 @@ const RegistrationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (formData.password.length < 8) {
       setError('Password must be at least 8 characters long');
       return;
@@ -26,9 +26,16 @@ const RegistrationForm = () => {
     const transformedData = {
       ...formData,
       first_name: formData.firstName,
-      last_name: formData.lastName
+      last_name: formData.lastName,
     };
-    register(transformedData, navigate, setError);
+    register(transformedData)
+    .then(() => {
+      navigate('/');
+    })
+    .catch(() => {
+      setError('Invalid email or password');
+    }
+    )
   };
 
   return (
@@ -37,11 +44,19 @@ const RegistrationForm = () => {
         <div className="col-md-6">
           <div className="card">
             <div className="card-body">
-              <h2 className="card-title text-center mb-4">Bookstore Register</h2>
-              {error && <div className="alert alert-danger" role="alert">{error}</div>}
+              <h2 className="card-title text-center mb-4">
+                Bookstore Register
+              </h2>
+              {error && (
+                <div className="alert alert-danger" role="alert">
+                  {error}
+                </div>
+              )}
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Email</label>
+                  <label htmlFor="email" className="form-label">
+                    Email
+                  </label>
                   <input
                     type="email"
                     id="email"
@@ -53,7 +68,9 @@ const RegistrationForm = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="firstName" className="form-label">First Name</label>
+                  <label htmlFor="firstName" className="form-label">
+                    First Name
+                  </label>
                   <input
                     type="text"
                     id="firstName"
@@ -65,7 +82,9 @@ const RegistrationForm = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="lastName" className="form-label">Last Name</label>
+                  <label htmlFor="lastName" className="form-label">
+                    Last Name
+                  </label>
                   <input
                     type="text"
                     id="lastName"
@@ -77,7 +96,9 @@ const RegistrationForm = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label">Password</label>
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
                   <input
                     type="password"
                     id="password"
@@ -88,7 +109,9 @@ const RegistrationForm = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">Register</button>
+                <button type="submit" className="btn btn-primary w-100">
+                  Register
+                </button>
               </form>
               <div className="mt-3 text-center">
                 Already have an account? <Link to="/">Login</Link>

@@ -4,7 +4,6 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter as Router } from 'react-router-dom';
 import LoginForm from './LoginForm';
 
-
 jest.mock('../../services/apiService', () => ({
   login: jest.fn(),
 }));
@@ -14,7 +13,7 @@ describe('LoginForm component', () => {
     const { getByLabelText } = render(
       <Router>
         <LoginForm />
-      </Router>
+      </Router>,
     );
     const emailInput = getByLabelText('Email');
     const passwordInput = getByLabelText('Password');
