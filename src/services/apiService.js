@@ -33,7 +33,7 @@ export const register = async (formData) => {
 export const getCustomers = async () => {
   try {
     const response = await apiService.get('/users/customers');
-    return response;
+    return response.data;
   } catch (error) {
     console.error('Error fetching users:', error);
     throw error;
